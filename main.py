@@ -32,9 +32,11 @@ pygame.display.set_caption("The TRON Game!")
 screen = pygame.display.set_mode((WWidght, WHight))
 
 font = pygame.font.Font(None, 36)
+InstructFont = pygame.font.Font(None, 20)
 PlayerText1 = font.render("Player1", True, BLUE)
 PlayerText2 = font.render("Player2", True, ORANGE)
-
+toRend = ["P1 - arrows","P2 - wasd","Press","SPASE","to start","new game.","Who get","10 points","will win!"]
+HelpText = [InstructFont.render(x, True, WHITE) for x in toRend]
 
 x = None
 y = None
@@ -53,6 +55,13 @@ def DrawScore():
         [WWidght - 50 - (PlayerScore1.get_width()/2), 40])
     screen.blit(PlayerScore2,
         [WWidght - 50 - (PlayerScore2.get_width()/2), 110])
+    textPosY = 200
+    i = 0
+    while(i<len(HelpText)):
+        screen.blit(HelpText[i],
+                    [WWidght - 50 - (HelpText[i].get_width()/2), textPosY])
+        i+=1
+        textPosY+=30
 
 def NewGame():
     global x
@@ -153,26 +162,26 @@ while not done:
                 if pressed[pygame.K_UP]: 
                     if direc[1] == LEFT or direc[1] == RIGHT: 
                         direc[1] = UP
-                if pressed[pygame.K_DOWN]: 
+                elif pressed[pygame.K_DOWN]: 
                     if direc[1] == LEFT or direc[1] == RIGHT: 
                         direc[1] = DOWN
-                if pressed[pygame.K_LEFT]:
+                elif pressed[pygame.K_LEFT]:
                     if direc[1] == UP or direc[1] == DOWN: 
                         direc[1] = LEFT            
-                if pressed[pygame.K_RIGHT]:
+                elif pressed[pygame.K_RIGHT]:
                     if direc[1] == UP or direc[1] == DOWN: 
                         direc[1] = RIGHT 
                 
                 if pressed[pygame.K_w]: 
                     if direc[2] == LEFT or direc[2] == RIGHT: 
                         direc[2] = UP
-                if pressed[pygame.K_s]:
+                elif pressed[pygame.K_s]:
                     if direc[2] == LEFT or direc[2] == RIGHT: 
                         direc[2] = DOWN
-                if pressed[pygame.K_a]:
+                elif pressed[pygame.K_a]:
                     if direc[2] == UP or direc[2] == DOWN: 
                         direc[2] = LEFT         
-                if pressed[pygame.K_d]:
+                elif pressed[pygame.K_d]:
                     if direc[2] == UP or direc[2] == DOWN: 
                         direc[2] = RIGHT 
                         
