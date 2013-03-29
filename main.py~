@@ -1,0 +1,106 @@
+import pygame
+
+WHITE = (255, 255, 255)
+BLACK = (0,0,0)
+BLUE = (0, 128, 255)
+ORANGE = (255, 100, 0)
+
+UP = 1
+DOWN = 2
+LEFT = 3
+RIGHT = 4
+
+x = [0,0,0]
+y = [0,0,0]
+direc = [0,0,0]
+
+WHight = 400
+WWidght = 500
+pygame.init()
+screen = pygame.display.set_mode((WWidght, WHight))
+done = False
+is_blue = True
+x[1] = WHight/2 - 100
+y[1] = WHight/2
+
+x[2] = WHight/2 + 100
+y[2] = WHight/2
+
+
+side = 4
+
+n = WHight/side
+
+whereCan = None
+temp = [True,]*n
+CanGo = temp*n
+
+
+dir[1] = UP
+dir[2] = UP
+
+
+def goDir(plNum, direct):
+    if direct == UP:
+        dir[plNum]=UP
+        
+
+
+speed = side
+
+clock = pygame.time.Clock()
+
+screen.fill((255, 255, 255))
+pygame.draw.rect(screen, BLACK , pygame.Rect(0, 0, WHight, WHight))
+
+pygame.draw.rect(screen, BLUE, pygame.Rect(x[1], y[1], side, side))
+pygame.draw.rect(screen, ORANGE, pygame.Rect(x[2], y[2], side, side))
+
+while not done:
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                        done = True
+        
+        
+        pressed = pygame.key.get_pressed()
+        
+        if pressed[pygame.K_SPACE]:
+            gameEnd = False
+            while not gameEnd:
+                pressed = pygame.key.get_pressed()
+                if pressed[pygame.K_UP]: 
+                    if dir[1] == LEFT or dir[1] == RIGHT: 
+                        dir[1] = UP
+                if pressed[pygame.K_DOWN]: 
+                    if dir[1] == LEFT or dir[1] == RIGHT: 
+                        dir[1] = DOWN
+                if pressed[pygame.K_LEFT]:
+                    if dir[1] == UP or dir[1] == DOWN: 
+                        dir[1] = LEFT            
+                if pressed[pygame.K_RIGHT]:
+                    if dir[1] == UP or dir[1] == DOWN: 
+                        dir[1] = RIGHT 
+                
+                if pressed[pygame.K_w]: 
+                    if dir[2] == LEFT or dir[2] == RIGHT: 
+                        dir[2] = UP
+                if pressed[pygame.K_s]:
+                    if dir[2] == LEFT or dir[2] == RIGHT: 
+                        dir[2] = DOWN
+                if pressed[pygame.K_a]:
+                    if dir[2] == UP or dir[2] == DOWN: 
+                        dir[2] = LEFT         
+                if pressed[pygame.K_d]:
+                    if dir[2] == UP or dir[2] == DOWN: 
+                        dir[2] = RIGHT 
+                        
+                        
+                #screen.fill((255, 255, 255))
+                
+                pygame.draw.rect(screen, BLUE, pygame.Rect(x[1], y[1], side, side))
+                pygame.draw.rect(screen, ORANGE, pygame.Rect(x[2], y[2], side, side))
+                
+                
+                pygame.display.flip()
+                #x+=speed
+                clock.tick(60)
