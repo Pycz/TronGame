@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-'
+# импорт библиотек
 import pygame
 import copy
 
+
+#константы цветов и FPS
 FPS = 50
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -11,46 +15,57 @@ ORANGE = (255, 100, 0)
 LORANGE = (255, 255, 0)
 GRAY = (50,50,50)
 
+# направления
 UP = 1
 DOWN = 2
 LEFT = 3
 RIGHT = 4
 
+# расчет ширины, длины, скорости, размерности
 WHight = 600
 WWidght = WHight + 100
 side = 4
 speed = side
 n = WHight/side
 
+# очки
 Points = [0,0,0]
+MaxPoints = 5
 
+# имена игроков
 Player1 = "Player1"
 Player2 = "Player2"
 
+# исключение для быстрого выхода из игры
 class ExitEx:
     pass
-
+# инициализация ресурсов
 pygame.mixer.init()
 pygame.mixer.music.load('musicc.mp3')
 splash = pygame.image.load('splash.jpg')
 
+# создание главного окна
 pygame.init()
 pygame.display.set_caption("The TRON Game!")
 screen = pygame.display.set_mode((WWidght, WHight))
 
+# создание основных надписей
 WLFont = font = pygame.font.Font(None, 72)
 font = pygame.font.Font(None, 36)
 InstructFont = pygame.font.Font(None, 20)
 PlayerText1 = font.render(Player1, True, BLUE)
 PlayerText2 = font.render(Player2, True, ORANGE)
-toRend = ["P1 - arrows","P2 - wasd","Press","SPASE","to start","new game.","Who get","10 points","will win!"]
+toRend = ["P1 - arrows","P2 - wasd","Press","SPASE","to start","new game.","Who get",str(MaxPoints)+" points","will win!"]
 HelpText = [InstructFont.render(x, True, WHITE) for x in toRend]
 
+# переменные - списки координат, направлений, непроходимости для игроков
 x = None
 y = None
 direc = None
 CanGo = None
 
+
+# рисует текущий счет
 def DrawScore():
     PlayerScore1 = font.render(str(Points[1]), True, LBLUE)
     PlayerScore2 = font.render(str(Points[2]), True, LORANGE)
@@ -71,6 +86,7 @@ def DrawScore():
         i+=1
         textPosY+=30
 
+# обнуляет параметры, создает новую игру
 def NewGame():
     global x
     x = [0,0,0]
@@ -101,17 +117,10 @@ def NewGame():
     pygame.draw.rect(screen, LORANGE, pygame.Rect(x[2], y[2], side, side))
     
     DrawScore()
+    
+ 
+# двигает игрока        
 
-def chgDir(plNum, direct):
-    if direct == UP:
-        direc[plNum]=UP
-    elif direct == DOWN:
-        direc[plNum]=DOWN
-    elif direct == LEFT:
-        direc[plNum]=LEFT
-    elif direct == RIGHT:
-        direc[plNum]=RIGHT  
-        
 def go(plNum):
     if direc[plNum] == UP:
         y[plNum]-=speed
@@ -122,18 +131,24 @@ def go(plNum):
     if direc[plNum] == RIGHT:
         x[plNum]+=speed      
 
+# устанавливает непроходимые участки
 def setKvadrs():
     CanGo[x[1]/side][y[1]/side] = False
     CanGo[x[2]/side][y[2]/side] = False
 
+# проверка на проигрыш игрока
 def playerLose(num):
     return x[num]/side<0 or x[num]/side>=n or   \
         y[num]/side<0 or y[num]/side>=n or      \
         not CanGo[x[num]/side][y[num]/side] 
-        
+
+
+# проверка на конец игры        
 def gameIsOver():
     return (x[1]==x[2] and y[1]==y[2]) or playerLose(1) or playerLose(2)
 
+
+# рещает - ничья или есть победитель (и кто он)
 def whoWin():
     if (x[1]==x[2] and y[1]==y[2]) or (playerLose(1) and playerLose(2)):
         return 0
@@ -143,27 +158,25 @@ def whoWin():
         return 1  
     
 
-clock = pygame.time.Clock()
-
-screen.fill(WHITE)
-
-pygame.mixer.music.play(-1)
+clock = pygame.time.Clock()   # таймер
+screen.fill(WHITE)            # залить экран белым цветом
+pygame.mixer.music.play(-1)   # включить музыку
 
 done = False
 NewGame()
 
-screen.blit(splash, (0, 0))
+screen.blit(splash, (0, 0))   # экран приветствия
 
 while not done:
-        for event in pygame.event.get():
+        for event in pygame.event.get():    # проверка на выход
                 if event.type == pygame.QUIT:
                         done = True
         try:                
-            pressed = pygame.key.get_pressed()
-            if pressed[pygame.K_SPACE]:
+            pressed = pygame.key.get_pressed()   
+            if pressed[pygame.K_SPACE]:     # начать игру по нажатию на пробел
                 pygame.event.pump()
-                Points = [0,0,0]
-                while(max(Points)<10):
+                Points = [0,0,0]            # обнуление очков
+                while(max(Points)<MaxPoints):  # пока игрок не выйиграет какой-нибудь
                     for event in pygame.event.get():
                             if event.type == pygame.QUIT:
                                     done = True
@@ -175,9 +188,10 @@ while not done:
                         pygame.event.pump()
                         setKvadrs()
                         gameEnd = False
-                        while not gameEnd:    
+                        while not gameEnd:         # заезд
                             pygame.event.pump()
-                            pressed = pygame.key.get_pressed()
+                            pressed = pygame.key.get_pressed() 
+                            # обработка поворотов первого игрока  
                             if pressed[pygame.K_UP]: 
                                 if direc[1] == LEFT or direc[1] == RIGHT: 
                                     direc[1] = UP
@@ -190,7 +204,8 @@ while not done:
                             elif pressed[pygame.K_RIGHT]:
                                 if direc[1] == UP or direc[1] == DOWN: 
                                     direc[1] = RIGHT 
-                            
+                                    
+                            # обработка поворотов второго игрока
                             if pressed[pygame.K_w]: 
                                 if direc[2] == LEFT or direc[2] == RIGHT: 
                                     direc[2] = UP
@@ -204,32 +219,39 @@ while not done:
                                 if direc[2] == UP or direc[2] == DOWN: 
                                     direc[2] = RIGHT 
                                     
-                            
+                            # рисование следа мотоцикла
                             pygame.draw.rect(screen, BLUE, pygame.Rect(x[1], y[1], side, side))
                             pygame.draw.rect(screen, ORANGE, pygame.Rect(x[2], y[2], side, side))
                             
+                            # перемещение
                             go(1)
                             go(2)
+                            
+                            # рисование самого мотоцикла
                             pygame.draw.rect(screen, LBLUE, pygame.Rect(x[1], y[1], side, side))
                             pygame.draw.rect(screen, LORANGE, pygame.Rect(x[2], y[2], side, side))
+                            
+                            # проверка на завершенность
                             gameEnd = gameIsOver()
                             if not gameEnd:
                                 setKvadrs()
-                            
+                                
+                            # перерисовка
                             pygame.display.flip()
                             clock.tick(FPS)
                             for event in pygame.event.get():
                                     if event.type == pygame.QUIT:
                                             done = True
                                             raise ExitEx
-                            
+                        # подсчет очков     
                         isWin = whoWin()
                         if isWin!=0:
                             Points[isWin]+=1
                         
                         print "GameOver!"
                         DrawScore()
-                if Points[1]>=10:
+                # вывод сообщения о победе
+                if Points[1]>=MaxPoints:
                     WinText = WLFont.render(Player1+" win!", True, RED)
                 else:
                     WinText = WLFont.render(Player2+" win!", True, RED)
