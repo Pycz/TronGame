@@ -25,6 +25,7 @@ Points = [0,0,0]
 
 #pygame.mixer.init()
 #pygame.mixer.music.load('musicc.mp3')
+splash = pygame.image.load('splash.jpg')
 
 pygame.init()
 pygame.display.set_caption("The TRON Game!")
@@ -132,6 +133,8 @@ screen.fill(WHITE)
 
 done = False
 NewGame()
+
+screen.blit(splash, (0, 0))
 
 while not done:
         for event in pygame.event.get():
