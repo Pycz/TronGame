@@ -27,6 +27,7 @@ Points = [0,0,0]
 #pygame.mixer.music.load('musicc.mp3')
 
 pygame.init()
+pygame.display.set_caption("The TRON Game!")
 screen = pygame.display.set_mode((WWidght, WHight))
 
 font = pygame.font.Font(None, 36)
